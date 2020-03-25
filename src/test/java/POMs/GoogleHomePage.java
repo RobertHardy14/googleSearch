@@ -1,30 +1,52 @@
 package POMs;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class GoogleHomePage
+public class GoogleHomePage extends BasePage
 {
-WebDriver driver = new ChromeDriver();
-WebDriverWait wait = new WebDriverWait(driver, 10);
 
-String expectedTitle = "Google";
-String actualTitle = driver.getTitle();
+    String expectedTitle = "Google";
+    @FindBy (id = "hplogo")
+    WebElement googleLogo; // <--- Aun lo tendria que declarar aqui?
+    @FindBy (name = "q")
+    WebElement searchBar;
+    @FindBy (name = "btnK")
+    WebElement searchButton;
 
-WebElement googleLogo = driver.findElement(By.id("hplogo"));
-WebElement searchBar = driver.findElement(By.name("q"));
-WebElement searchButton = driver.findElement(By.name("btnK"));
+    public GoogleHomePage(WebDriver driver)
+    {
+        super(driver);
 
-public void gotoWebpage()
-{}
+        PageFactory.initElements(driver,this);
+    }
 
-public void typeInSearchbar()
-{}
+    public void gotoWebpage()
+    {
+        driver.get("http://google.com");
+        String actualTitle = driver.getTitle();
+        wait = new WebDriverWait(driver,15);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("hplogo"))); // <--- Aun que este aqui?
+        Assert.assertEquals(actualTitle,expectedTitle);
+        System.out.println("Correct webpage");
+    }
 
-public void clickSearchButton()
-{}
+    public void typeInSearchbar()
+    {
+        searchBar.click();
+        searchBar.sendKeys("South Park");
+    }
+
+    public void clickSearchButton()
+    {
+        searchButton.click();
+    }
 
 }
